@@ -1,9 +1,12 @@
 import { motion, AnimatePresence } from 'framer-motion';
 import { useState, useEffect } from 'react';
+import { useCart } from '../context/CartContext';
 
 const MenuSection = () => {
   const [hoveredItem, setHoveredItem] = useState<number | null>(null);
   const [showAll, setShowAll] = useState(false);
+  const { addToCart } = useCart();
+  const [flyingImage, setFlyingImage] = useState<{ src: string; x: number; y: number } | null>(null);
 
   const menuItems = [
     {
@@ -110,6 +113,70 @@ const MenuSection = () => {
         }
       }, 100);
       return () => clearTimeout(timeout);
+    }
+  };
+
+  const handleOrderClick = (item: any, e: React.MouseEvent) => {
+    // Get the button position
+    const button = e.currentTarget;
+    const rect = button.getBoundingClientRect();
+    const x = rect.left + rect.width / 2;
+    const y = rect.top + rect.height / 2;
+
+    // Set the flying image
+    setFlyingImage({ src: item.image, x, y });
+
+    // Get cart icon position
+    const cartIcon = document.querySelector('.cart-icon');
+    if (cartIcon) {
+      const cartRect = cartIcon.getBoundingClientRect();
+      const cartX = cartRect.left + cartRect.width / 2;
+      const cartY = cartRect.top + cartRect.height / 2;
+
+      // Create and animate the flying element
+      const flyingEl = document.createElement('div');
+      flyingEl.style.cssText = `
+        position: fixed;
+        z-index: 100;
+        left: ${x}px;
+        top: ${y}px;
+        pointer-events: none;
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        overflow: hidden;
+        transform: translate(-50%, -50%);
+        box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+      `;
+
+      const img = document.createElement('img');
+      img.src = item.image;
+      img.style.cssText = `
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+      `;
+
+      flyingEl.appendChild(img);
+      document.body.appendChild(flyingEl);
+
+      // Animate using keyframes
+      flyingEl.animate([
+        {
+          transform: `translate(${x - x}px, ${y - y}px) scale(1)`,
+          opacity: 1
+        },
+        {
+          transform: `translate(${cartX - x}px, ${cartY - y}px) scale(0.2)`,
+          opacity: 0
+        }
+      ], {
+        duration: 800,
+        easing: 'cubic-bezier(0.2, 0.8, 0.2, 1)'
+      }).onfinish = () => {
+        document.body.removeChild(flyingEl);
+        addToCart(item);
+      };
     }
   };
 
@@ -268,6 +335,7 @@ const MenuSection = () => {
                         whileHover={{ scale: 1.05 }}
                         whileTap={{ scale: 0.95 }}
                         className="px-4 py-2 bg-gradient-to-r from-primary to-primary/80 text-white rounded-lg text-sm font-medium hover:from-primary/90 hover:to-primary/70 transition-colors"
+                        onClick={(e) => handleOrderClick(item, e)}
                       >
                         Order Now
                       </motion.button>
