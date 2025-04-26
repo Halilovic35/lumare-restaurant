@@ -1,0 +1,95 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    @apply scroll-pt-24;
+  }
+  
+  body {
+    @apply bg-light text-dark font-sans;
+  }
+}
+
+@layer components {
+  .btn {
+    @apply px-6 py-3 rounded-lg font-medium transition-all duration-300 transform hover:scale-105 active:scale-95 shadow-sm;
+  }
+  
+  .btn-primary {
+    @apply bg-primary text-dark hover:bg-primary/90 hover:shadow-lg focus:ring-2 focus:ring-primary/50 focus:outline-none;
+  }
+
+  .btn-secondary {
+    @apply bg-secondary text-light hover:bg-secondary/90 hover:shadow-lg focus:ring-2 focus:ring-secondary/50 focus:outline-none;
+  }
+  
+  .section {
+    @apply py-24 px-4 overflow-hidden;
+  }
+
+  .container {
+    @apply max-w-7xl mx-auto px-4 sm:px-6 lg:px-8;
+  }
+  
+  .heading {
+    @apply text-4xl md:text-5xl font-serif font-bold mb-8 tracking-tight;
+  }
+
+  .subheading {
+    @apply text-xl md:text-2xl font-serif mb-6 text-gray-700;
+  }
+
+  .nav-link {
+    @apply text-dark hover:text-primary transition-all duration-300 relative font-medium tracking-wide py-2;
+  }
+
+  .nav-link::after {
+    content: '';
+    @apply absolute bottom-0 left-1/2 -translate-x-1/2 w-0 h-0.5 bg-primary transition-all duration-300 rounded-full;
+  }
+
+  .nav-link:hover::after {
+    @apply w-full;
+  }
+
+  .menu-card {
+    @apply bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl hover:-translate-y-1;
+  }
+
+  .menu-card img {
+    @apply transition-transform duration-500 hover:scale-105;
+  }
+
+  .form-input {
+    @apply mt-1 block w-full rounded-lg border-gray-300 shadow-sm focus:border-primary focus:ring-primary transition-all duration-200 bg-white/50 backdrop-blur-sm;
+  }
+
+  .form-input.error {
+    @apply border-red-500 focus:border-red-500 focus:ring-red-500 animate-shake;
+  }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+  }
+
+  .animate-shake {
+    animation: shake 0.5s ease-in-out;
+  }
+
+  .loading-spinner {
+    @apply animate-spin h-5 w-5 border-2 border-white border-t-transparent rounded-full;
+  }
+
+  .logo-link {
+    @apply inline-block transition-transform duration-300 hover:scale-105;
+  }
+
+  .logo-image {
+    @apply w-12 h-12 object-contain;
+  }
+}
